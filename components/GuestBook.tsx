@@ -55,6 +55,7 @@ export function GuestBook() {
   const playerRef = useRef<HTMLAudioElement>(null);
 
   const [photoName, setPhotoName] = useState("");
+  const [photoMessage, setPhotoMessage] = useState("");
   const [photoStep, setPhotoStep] = useState<"form" | "done">("form");
   const [photoBusy, setPhotoBusy] = useState(false);
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState<string | null>(null);
@@ -177,6 +178,7 @@ export function GuestBook() {
 
   function openPhoto() {
     setPhotoName("");
+    setPhotoMessage("");
     setPhotoStep("form");
     photoFileRef.current = null;
     if (photoPreviewUrl) {
@@ -318,6 +320,7 @@ export function GuestBook() {
       const fd = new FormData();
       fd.append("kind", "photo");
       fd.append("name", name);
+      fd.append("message", photoMessage.trim());
       fd.append("file", file);
       const res = await fetch("/api/entries/media", { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
@@ -654,6 +657,16 @@ export function GuestBook() {
                 onChange={(e) => setPhotoName(e.target.value)}
               />
             </div>
+            <div className="bgb-field">
+              <label htmlFor="photoMessage">Your message</label>
+              <textarea
+                id="photoMessage"
+                maxLength={500}
+                placeholder="Optional — a note to go with the photo"
+                value={photoMessage}
+                onChange={(e) => setPhotoMessage(e.target.value)}
+              />
+            </div>
             <input
               ref={photoInputRef}
               type="file"
@@ -664,7 +677,7 @@ export function GuestBook() {
               onChange={onPhotoPick}
             />
             <button type="button" className="bgb-action-btn" onClick={() => photoInputRef.current?.click()}>
-              Choose photo
+              Share a photo of him
             </button>
             {photoPreviewUrl && (
               <div className="bgb-photo-preview">

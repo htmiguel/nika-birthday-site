@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminDeleteEntry } from "@/components/AdminDeleteEntry";
 import { listAllEntries } from "@/lib/entries-query";
 import type { GuestbookEntry } from "@/lib/entries-query";
 
@@ -89,8 +90,11 @@ export default async function JordanAdminPage({
           {entries.map((e) => (
             <li key={e.id} className="admin-card">
               <div className="admin-card-meta">
-                <time dateTime={e.createdAt}>{formatTs(e.createdAt)}</time>
-                <span className="admin-badge">{kindLabel(e.type)}</span>
+                <div className="admin-card-meta-main">
+                  <time dateTime={e.createdAt}>{formatTs(e.createdAt)}</time>
+                  <span className="admin-badge">{kindLabel(e.type)}</span>
+                </div>
+                <AdminDeleteEntry entryId={e.id} adminSecret={secret} />
               </div>
               <p className="admin-name">{e.name}</p>
               {e.type === "message" && e.text && (
@@ -98,6 +102,9 @@ export default async function JordanAdminPage({
               )}
               {e.type === "voice" && e.mediaUrl && (
                 <audio className="admin-audio" src={e.mediaUrl} controls preload="none" />
+              )}
+              {e.type === "photo" && e.text && (
+                <p className="admin-body">{e.text}</p>
               )}
               {e.type === "photo" && e.mediaUrl && (
                 <div className="admin-photo">

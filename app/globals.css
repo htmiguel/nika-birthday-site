@@ -601,8 +601,39 @@ a.bgb-action-btn {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
   margin-bottom: 0.35rem;
+}
+
+.admin-card-meta-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-delete-btn {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-dim);
+  background: transparent;
+  color: var(--accent-dim);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--transition), color var(--transition);
+}
+
+.admin-delete-btn:hover:not(:disabled) {
+  background: rgb(220 90 70 / 0.15);
+}
+
+.admin-delete-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .admin-card-meta time {

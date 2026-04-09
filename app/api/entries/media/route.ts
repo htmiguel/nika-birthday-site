@@ -82,6 +82,7 @@ export async function POST(req: Request) {
   const kind = formData.get("kind");
   const name = String(formData.get("name") ?? "").trim();
   const file = formData.get("file");
+  const messageRaw = String(formData.get("message") ?? "").trim();
 
   if (kind !== "voice" && kind !== "photo") {
     return NextResponse.json({ error: "kind must be voice or photo" }, { status: 400 });
@@ -89,6 +90,13 @@ export async function POST(req: Request) {
   if (!name || name.length > 60) {
     return NextResponse.json({ error: "Name is required (max 60 characters)." }, { status: 400 });
   }
+  if (kind === "photo" && messageRaw.length > 500) {
+    return NextResponse.json(
+      { error: "Message must be at most 500 characters." },
+      { status: 400 }
+    );
+  }
+  const messageText = kind === "photo" && messageRaw ? messageRaw : null;
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "File is required" }, { status: 400 });
   }
@@ -157,7 +165,7 @@ export async function POST(req: Request) {
     const sql = getSql();
     await sql`
       INSERT INTO guestbook_entry (entry_type, guest_name, message_text, media_url)
-      VALUES (${kind}, ${name}, NULL, ${publicUrl})
+      VALUES (${kind}, ${name}, ${messageText}, ${publicUrl})
     `;
     return NextResponse.json({ ok: true, url: publicUrl });
   } catch (e) {
