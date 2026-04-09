@@ -8,32 +8,13 @@ import {
   put,
 } from "@vercel/blob";
 import { NextResponse } from "next/server";
+import { getBlobReadWriteToken } from "@/lib/blob-token";
 import { getSql } from "@/lib/db";
 
 export const runtime = "nodejs";
 
 /** Keep under typical Vercel function request body limits (~4.5 MB on many plans). */
 const MAX_BYTES = 4 * 1024 * 1024;
-
-/** Vercel/dashboard paste sometimes includes wrapping quotes — those break auth. */
-function normalizeEnvToken(raw: string): string {
-  let t = raw.trim();
-  if (
-    (t.startsWith('"') && t.endsWith('"')) ||
-    (t.startsWith("'") && t.endsWith("'"))
-  ) {
-    t = t.slice(1, -1).trim();
-  }
-  return t;
-}
-
-function getBlobToken(): string | null {
-  const a = process.env.BLOB_READ_WRITE_TOKEN;
-  const b = process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
-  const picked = (a ?? b ?? "").trim();
-  if (!picked) return null;
-  return normalizeEnvToken(picked);
-}
 
 function uploadErrorMessage(e: unknown): string {
   if (e instanceof BlobStoreNotFoundError) {
@@ -122,7 +103,7 @@ export async function POST(req: Request) {
   const buf = Buffer.from(await file.arrayBuffer());
   let publicUrl: string;
 
-  const blobToken = getBlobToken();
+  const blobToken = getBlobReadWriteToken();
   const useDevDisk =
     !blobToken &&
     process.env.NODE_ENV === "development" &&

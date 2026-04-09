@@ -15,7 +15,7 @@ export function AdminDeleteEntry({
 
   async function onDelete() {
     const confirmed = window.confirm(
-      "Delete this guest book entry permanently?\n\nThis is irreversible. The row will be removed from the database. Files already stored in Blob are not removed automatically."
+      "Delete this guest book entry permanently?\n\nThis cannot be undone. The listing is removed from the database and any uploaded file is deleted from Vercel Blob (if your server has BLOB_READ_WRITE_TOKEN). Plain text messages have no file."
     );
     if (!confirmed) return;
 
