@@ -371,15 +371,20 @@ export function GuestBook() {
         </div>
       )}
 
-      <section className="bgb-card" aria-label="Birthday guest book — 18th birthday and graduation">
+      <section
+        className="bgb-card"
+        aria-label="Jordan's 18th birthday guest book"
+      >
         <div className="bgb-card-top">
           <div className="bgb-card-visual">
             <Image src="/hero.png" alt="Guest of honor" width={240} height={240} />
           </div>
           <p className="bgb-card-kicker">Birthday guest book</p>
-          <p className="bgb-card-title">His 18th birthday—he&apos;s graduating</p>
+          <p className="bgb-card-title">Jordan&apos;s 18th birthday</p>
           <p className="bgb-card-sub">
-            Leave a message to wish him the best. You can add a voice note or photo too.
+            A milestone birthday. And he&apos;s graduating from high school.
+            <br />
+            Leave him a voice, text, or photo note—and send him money for his summer trip to Europe!
           </p>
         </div>
         <div className="bgb-actions">
