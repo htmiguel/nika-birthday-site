@@ -396,29 +396,6 @@ export function GuestBook() {
         </div>
       </section>
 
-      <div className="bgb-share">
-        <div className="bgb-share-action">
-          {shareCopiedVisible && (
-            <span
-              key={shareCopiedKey}
-              className="bgb-copied-toast"
-              role="status"
-              aria-live="polite"
-              onAnimationEnd={(e) => {
-                if (e.animationName === "bgbCopiedFade") {
-                  setShareCopiedVisible(false);
-                }
-              }}
-            >
-              Copied
-            </span>
-          )}
-          <button type="button" className="bgb-action-btn" onClick={() => void copyShare()}>
-            share this
-          </button>
-        </div>
-      </div>
-
       {!loadError && (
         <section className="bgb-goal-panel" aria-label="Progress toward goal">
           {loadingStats || !stats ? (
@@ -445,6 +422,28 @@ export function GuestBook() {
               <p className="bgb-goal-pct">{stats.progressPct}% toward this goal</p>
             </>
           )}
+          <div className="bgb-share">
+            <div className="bgb-share-action">
+              {shareCopiedVisible && (
+                <span
+                  key={shareCopiedKey}
+                  className="bgb-copied-toast"
+                  role="status"
+                  aria-live="polite"
+                  onAnimationEnd={(e) => {
+                    if (e.animationName === "bgbCopiedFade") {
+                      setShareCopiedVisible(false);
+                    }
+                  }}
+                >
+                  Copied
+                </span>
+              )}
+              <button type="button" className="bgb-action-btn" onClick={() => void copyShare()}>
+                Share this with someone who knows Jordan
+              </button>
+            </div>
+          </div>
         </section>
       )}
 
