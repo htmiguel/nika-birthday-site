@@ -291,6 +291,26 @@ a.bgb-action-btn {
   max-width: 100%;
 }
 
+.bgb-share-cta-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-align: left;
+  line-height: 1.25;
+}
+
+.bgb-share-cta-icon {
+  flex-shrink: 0;
+}
+
+/* Narrow column: keep share CTA on one line */
+.bgb-goal-panel .bgb-share-cta {
+  font-size: clamp(0.78rem, 2.85vw, 0.88rem);
+  padding-left: 0.55rem;
+  padding-right: 0.55rem;
+}
+
 @keyframes bgbCopiedFade {
   0% {
     opacity: 0;
@@ -517,11 +537,11 @@ a.bgb-action-btn {
 }
 
 .bgb-goal-count {
-  font-size: 1.35rem;
+  font-size: clamp(1.02rem, 3.9vw, 1.18rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   margin: 0 0 0.35rem;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .bgb-goal-count .num {
