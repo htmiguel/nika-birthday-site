@@ -398,30 +398,6 @@ export function GuestBook() {
 
       {!loadError && (
         <section className="bgb-goal-panel" aria-label="Progress toward goal">
-          {loadingStats || !stats ? (
-            <p className="proto-sub" style={{ margin: 0 }}>
-              Loading…
-            </p>
-          ) : (
-            <>
-              <p className="bgb-goal-count">
-                <span className="num">{stats.uniquePeople}</span>{" "}
-                {stats.uniquePeople === 1 ? "person has" : "people have"} shared something
-              </p>
-              <p className="bgb-goal-sub">
-                {stats.totalSubmissions} total{" "}
-                {stats.totalSubmissions === 1 ? "wish" : "wishes"} (messages, voice notes, photos)
-              </p>
-              <p className="bgb-goal-next">
-                Next goal: <strong>{stats.nextGoal}</strong> people ·{" "}
-                <strong>{stats.remaining}</strong> to go
-              </p>
-              <div className="bgb-goal-bar" role="progressbar" aria-valuenow={stats.progressPct} aria-valuemin={0} aria-valuemax={100}>
-                <div className="bgb-goal-bar-fill" style={{ width: `${stats.progressPct}%` }} />
-              </div>
-              <p className="bgb-goal-pct">{stats.progressPct}% toward this goal</p>
-            </>
-          )}
           <div className="bgb-share">
             <div className="bgb-share-action">
               {shareCopiedVisible && (
@@ -444,6 +420,30 @@ export function GuestBook() {
               </button>
             </div>
           </div>
+          {loadingStats || !stats ? (
+            <p className="proto-sub bgb-goal-panel-after-share" style={{ marginBottom: 0 }}>
+              Loading…
+            </p>
+          ) : (
+            <>
+              <p className="bgb-goal-count bgb-goal-panel-after-share">
+                <span className="num">{stats.uniquePeople}</span>{" "}
+                {stats.uniquePeople === 1 ? "person has" : "people have"} shared something
+              </p>
+              <p className="bgb-goal-sub">
+                {stats.totalSubmissions} total{" "}
+                {stats.totalSubmissions === 1 ? "wish" : "wishes"} (messages, voice notes, photos)
+              </p>
+              <p className="bgb-goal-next">
+                Next goal: <strong>{stats.nextGoal}</strong> people ·{" "}
+                <strong>{stats.remaining}</strong> to go
+              </p>
+              <div className="bgb-goal-bar" role="progressbar" aria-valuenow={stats.progressPct} aria-valuemin={0} aria-valuemax={100}>
+                <div className="bgb-goal-bar-fill" style={{ width: `${stats.progressPct}%` }} />
+              </div>
+              <p className="bgb-goal-pct">{stats.progressPct}% toward this goal</p>
+            </>
+          )}
         </section>
       )}
 

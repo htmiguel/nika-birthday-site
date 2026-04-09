@@ -266,9 +266,18 @@ a.bgb-action-btn {
 }
 
 .bgb-goal-panel .bgb-share {
-  margin-top: 1.1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
+  margin-bottom: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.bgb-goal-panel-after-share {
+  margin-top: 1rem;
+}
+
+/* .bgb-goal-count margin shorthand runs later; keep space below share */
+.bgb-goal-panel .bgb-goal-count.bgb-goal-panel-after-share {
+  margin-top: 1rem;
 }
 
 .bgb-share-action {
@@ -550,10 +559,6 @@ a.bgb-action-btn {
   font-size: 0.75rem;
   color: var(--muted);
   margin: 0.4rem 0 0;
-}
-
-.bgb-goal-panel .bgb-goal-pct {
-  margin-bottom: 0;
 }
 
 /* Admin */
