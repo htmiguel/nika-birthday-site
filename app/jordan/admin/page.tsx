@@ -101,6 +101,7 @@ export default async function JordanAdminPage({
               )}
               {e.type === "photo" && e.mediaUrl && (
                 <div className="admin-photo">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- arbitrary guest-upload URLs */}
                   <img src={e.mediaUrl} alt="" width={320} height={320} />
                 </div>
               )}

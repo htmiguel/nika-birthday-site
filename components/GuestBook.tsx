@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -375,7 +376,7 @@ export function GuestBook() {
       <section className="bgb-card" aria-label="Birthday guest book">
         <div className="bgb-card-top">
           <div className="bgb-card-visual">
-            <img src="/hero.png" alt="Guest of honor" width={240} height={240} />
+            <Image src="/hero.png" alt="Guest of honor" width={240} height={240} />
           </div>
           <p className="bgb-card-kicker">Birthday guest book</p>
           <p className="bgb-card-title">Celebrating a friend</p>
@@ -626,6 +627,7 @@ export function GuestBook() {
             </button>
             {photoPreviewUrl && (
               <div className="bgb-photo-preview">
+                {/* eslint-disable-next-line @next/next/no-img-element -- blob: object URL from file picker */}
                 <img src={photoPreviewUrl} alt="Preview" />
               </div>
             )}

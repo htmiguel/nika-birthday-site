@@ -5,20 +5,24 @@
     "dev": "next dev --turbopack -p 3040",
     "build": "next build",
     "start": "next start -p 3040",
+    "lint": "eslint .",
     "db:apply-schema": "node ./scripts/apply-schema.mjs"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.10.4",
     "@vercel/analytics": "^1.5.0",
     "@vercel/blob": "^0.27.1",
     "next": "^15.2.4",
+    "postgres": "^3.4.9",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@types/node": "^22.14.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^15.2.4",
     "typescript": "^5.8.2"
   }
 }

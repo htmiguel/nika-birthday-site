@@ -1,4 +1,6 @@
 import { randomUUID } from "crypto";
+import { mkdir, writeFile } from "fs/promises";
+import path from "path";
 import {
   BlobClientTokenExpiredError,
   BlobStoreNotFoundError,
@@ -44,7 +46,7 @@ function uploadErrorMessage(e: unknown): string {
     return "Blob token expired. Regenerate BLOB_READ_WRITE_TOKEN in Vercel.";
   }
   if (e instanceof Error) {
-    let m = e.message.replace(/^Vercel Blob:\s*/i, "").trim();
+    const m = e.message.replace(/^Vercel Blob:\s*/i, "").trim();
     if (/no token found/i.test(m)) {
       return "Blob token missing. Set BLOB_READ_WRITE_TOKEN for this Vercel project (Production + Preview).";
     }
@@ -64,18 +66,6 @@ function extFor(kind: string, file: File): string {
 }
 
 export async function POST(req: Request) {
-  const token = getBlobToken();
-  if (!token) {
-    return NextResponse.json(
-      {
-        error:
-          "Blob storage not configured. Add Vercel Blob and BLOB_READ_WRITE_TOKEN (Production + Preview), then redeploy.",
-        code: "BLOB_TOKEN_MISSING",
-      },
-      { status: 503 }
-    );
-  }
-
   let formData: FormData;
   try {
     formData = await req.formData();
@@ -121,29 +111,55 @@ export async function POST(req: Request) {
     file.type ||
     (kind === "voice" ? "audio/webm" : "image/jpeg");
 
-  let uploaded;
-  try {
-    const buf = Buffer.from(await file.arrayBuffer());
-    uploaded = await put(pathname, buf, {
-      access: "public",
-      token,
-      contentType,
-    });
-  } catch (e) {
-    console.error(e);
-    return NextResponse.json(
-      { error: uploadErrorMessage(e), code: "BLOB_PUT" },
-      { status: 500 }
-    );
+  const buf = Buffer.from(await file.arrayBuffer());
+  let publicUrl: string;
+
+  const blobToken = getBlobToken();
+  const useDevDisk =
+    !blobToken &&
+    process.env.NODE_ENV === "development" &&
+    process.env.DISABLE_DEV_LOCAL_MEDIA !== "1";
+
+  if (useDevDisk) {
+    const rel = path.join("public", "dev-media", pathname);
+    const abs = path.join(process.cwd(), rel);
+    await mkdir(path.dirname(abs), { recursive: true });
+    await writeFile(abs, buf);
+    publicUrl = `/dev-media/${pathname}`;
+  } else {
+    if (!blobToken) {
+      return NextResponse.json(
+        {
+          error:
+            "Blob storage not configured. Add Vercel Blob and BLOB_READ_WRITE_TOKEN (Production + Preview), then redeploy. For local dev without Blob, run `next dev` (NODE_ENV=development) or set DISABLE_DEV_LOCAL_MEDIA=1 to force this error.",
+          code: "BLOB_TOKEN_MISSING",
+        },
+        { status: 503 }
+      );
+    }
+    try {
+      const uploaded = await put(pathname, buf, {
+        access: "public",
+        token: blobToken,
+        contentType,
+      });
+      publicUrl = uploaded.url;
+    } catch (e) {
+      console.error(e);
+      return NextResponse.json(
+        { error: uploadErrorMessage(e), code: "BLOB_PUT" },
+        { status: 500 }
+      );
+    }
   }
 
   try {
     const sql = getSql();
     await sql`
       INSERT INTO guestbook_entry (entry_type, guest_name, message_text, media_url)
-      VALUES (${kind}, ${name}, NULL, ${uploaded.url})
+      VALUES (${kind}, ${name}, NULL, ${publicUrl})
     `;
-    return NextResponse.json({ ok: true, url: uploaded.url });
+    return NextResponse.json({ ok: true, url: publicUrl });
   } catch (e) {
     console.error(e);
     const msg = e instanceof Error ? e.message : "";
@@ -151,8 +167,8 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error: missingTable
-          ? "Database table missing. Open Neon (or your DB) and run schema.sql from the repo."
-          : "Saved file to Blob but database insert failed. Check DATABASE_URL / POSTGRES_URL and Vercel logs.",
+          ? "Database table missing. Run npm run db:apply-schema (or schema.sql) against your DATABASE_URL."
+          : "File was saved but the database insert failed. Check DATABASE_URL / POSTGRES_URL and server logs.",
         code: "DB_INSERT",
       },
       { status: 500 }
