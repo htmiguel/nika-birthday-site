@@ -371,14 +371,16 @@ export function GuestBook() {
         </div>
       )}
 
-      <section className="bgb-card" aria-label="Birthday guest book">
+      <section className="bgb-card" aria-label="Birthday guest book — 18th birthday and graduation">
         <div className="bgb-card-top">
           <div className="bgb-card-visual">
             <Image src="/hero.png" alt="Guest of honor" width={240} height={240} />
           </div>
           <p className="bgb-card-kicker">Birthday guest book</p>
-          <p className="bgb-card-title">Leave a message</p>
-          <p className="bgb-card-sub">Tap an option to leave a wish</p>
+          <p className="bgb-card-title">His 18th birthday—he&apos;s graduating</p>
+          <p className="bgb-card-sub">
+            Leave a message to wish him the best. You can add a voice note or photo too.
+          </p>
         </div>
         <div className="bgb-actions">
           <button type="button" className="bgb-action-btn primary" onClick={openCash}>
