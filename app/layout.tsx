@@ -1,0 +1,25 @@
+import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/react";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: "Birthday guest book",
+  description: "Leave a message, voice note, or photo for the celebration.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <Analytics />
+      </body>
+    </html>
+  );
+}
