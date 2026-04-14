@@ -19,9 +19,10 @@ Use a **dedicated** Neon database and Blob store for this project (do not share 
 
 ```bash
 cd /path/to/nika-birthday-site   # this repo root
-cp .env.example .env.local
-# Fill DATABASE_URL, BLOB_READ_WRITE_TOKEN, and NIKA_ADMIN_SECRET (optional locally)
 npm install
+# Recommended: pull Production env from the linked Vercel project (Neon + Blob)
+npm run env:pull
+# Or: cp .env.example .env.local  then fill DATABASE_URL / POSTGRES_URL, BLOB_READ_WRITE_TOKEN, NIKA_ADMIN_SECRET
 npm run dev
 ```
 
