@@ -21,7 +21,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     color-scheme: dark;
     --bg: #141413;
     --surface: #1c1c1c;
@@ -39,6 +39,23 @@
   }
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141413;
+  --surface: #1c1c1c;
+  --surface-raised: #242424;
+  --text: #f5f5f4;
+  --muted: #a3a3a3;
+  --accent: #e07a5f;
+  --accent-dim: #c96b52;
+  --accent-glow: rgba(224, 122, 95, 0.15);
+  --border: #2e2e2e;
+  --border-strong: #3a3a3a;
+  --btn-on-accent: #141413;
+  --shadow-soft: 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-card-hover: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -54,6 +71,49 @@ body {
   padding-left: max(1rem, env(safe-area-inset-left));
   padding-right: max(1rem, env(safe-area-inset-right));
   padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  transition:
+    background-color 0.22s ease,
+    color 0.22s ease;
+}
+
+.theme-toggle-wrap {
+  position: fixed;
+  top: max(0.65rem, env(safe-area-inset-top));
+  right: max(0.65rem, env(safe-area-inset-right));
+  z-index: 50;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.55rem;
+  height: 2.55rem;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle:hover {
+  background: var(--surface-raised);
+}
+
+.theme-toggle:active {
+  transform: scale(0.96);
+}
+
+.theme-toggle svg {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .proto-shell.wide {
