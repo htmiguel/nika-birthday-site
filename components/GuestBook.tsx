@@ -381,15 +381,6 @@ export function GuestBook() {
 
   const shareMessage = sharePageUrl ? buildShareMessage(sharePageUrl) : "";
   const smsHref = sharePageUrl ? `sms:?body=${encodeURIComponent(shareMessage)}` : "";
-  const mailHref = sharePageUrl
-    ? `mailto:?subject=${encodeURIComponent(SHARE_TITLE)}&body=${encodeURIComponent(shareMessage)}`
-    : "";
-  const waHref = sharePageUrl
-    ? `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`
-    : "";
-  const fbHref = sharePageUrl
-    ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}`
-    : "";
 
   return (
     <div className="proto-shell wide">
@@ -494,7 +485,7 @@ export function GuestBook() {
               </button>
             </div>
             {sharePageUrl ? (
-              <div className="bgb-share-chips" role="group" aria-label="Share in an app">
+              <div className="bgb-share-chips" role="group" aria-label="More share options">
                 {canSystemShare ? (
                   <button
                     type="button"
@@ -506,25 +497,6 @@ export function GuestBook() {
                 ) : null}
                 <a className="bgb-action-btn bgb-share-chip" href={smsHref}>
                   Messages
-                </a>
-                <a
-                  className="bgb-action-btn bgb-share-chip"
-                  href={waHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  WhatsApp
-                </a>
-                <a className="bgb-action-btn bgb-share-chip" href={mailHref}>
-                  Mail
-                </a>
-                <a
-                  className="bgb-action-btn bgb-share-chip"
-                  href={fbHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Facebook
                 </a>
               </div>
             ) : null}
