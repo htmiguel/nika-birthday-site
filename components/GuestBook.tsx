@@ -9,6 +9,12 @@ import {
   useState,
 } from "react";
 
+const SHARE_TITLE = "Nika's birthday guest book";
+
+function buildShareMessage(url: string) {
+  return `Leave a birthday wish for Nika — add a message, voice note, or photo on her guest book:\n${url}`;
+}
+
 type PublicStats = {
   uniquePeople: number;
   totalSubmissions: number;
@@ -25,6 +31,8 @@ export function GuestBook() {
   const [openModal, setOpenModal] = useState<null | "message" | "voice" | "photo">(null);
   const [shareCopiedVisible, setShareCopiedVisible] = useState(false);
   const [shareCopiedKey, setShareCopiedKey] = useState(0);
+  const [sharePageUrl, setSharePageUrl] = useState("");
+  const [canSystemShare, setCanSystemShare] = useState(false);
 
   const dlgMessage = useRef<HTMLDialogElement>(null);
   const dlgVoice = useRef<HTMLDialogElement>(null);
@@ -91,6 +99,11 @@ export function GuestBook() {
     const id = window.setTimeout(() => setShareCopiedVisible(false), 2500);
     return () => window.clearTimeout(id);
   }, [shareCopiedVisible, shareCopiedKey]);
+
+  useEffect(() => {
+    setSharePageUrl(window.location.href);
+    setCanSystemShare(typeof navigator.share === "function");
+  }, []);
 
   useEffect(() => {
     const dm = dlgMessage.current;
@@ -318,7 +331,8 @@ export function GuestBook() {
   }
 
   async function copyShare() {
-    const url = typeof window !== "undefined" ? window.location.href : "";
+    const url =
+      sharePageUrl || (typeof window !== "undefined" ? window.location.href : "");
     if (!url) return;
     const flashCopied = () => {
       setShareCopiedKey((k) => k + 1);
@@ -344,6 +358,38 @@ export function GuestBook() {
       }
     }
   }
+
+  async function systemShare() {
+    const url =
+      sharePageUrl || (typeof window !== "undefined" ? window.location.href : "");
+    if (!url || typeof navigator.share !== "function") {
+      void copyShare();
+      return;
+    }
+    const text = buildShareMessage(url);
+    try {
+      await navigator.share({
+        title: SHARE_TITLE,
+        text,
+        url,
+      });
+    } catch (e) {
+      const err = e as { name?: string };
+      if (err?.name !== "AbortError") void copyShare();
+    }
+  }
+
+  const shareMessage = sharePageUrl ? buildShareMessage(sharePageUrl) : "";
+  const smsHref = sharePageUrl ? `sms:?body=${encodeURIComponent(shareMessage)}` : "";
+  const mailHref = sharePageUrl
+    ? `mailto:?subject=${encodeURIComponent(SHARE_TITLE)}&body=${encodeURIComponent(shareMessage)}`
+    : "";
+  const waHref = sharePageUrl
+    ? `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`
+    : "";
+  const fbHref = sharePageUrl
+    ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}`
+    : "";
 
   return (
     <div className="proto-shell wide">
@@ -404,6 +450,7 @@ export function GuestBook() {
       {!loadError && (
         <section className="bgb-goal-panel" aria-label="Progress toward goal">
           <div className="bgb-share">
+            <p className="bgb-share-lede">Share with someone who knows Nika</p>
             <div className="bgb-share-action">
               {shareCopiedVisible && (
                 <span
@@ -442,10 +489,45 @@ export function GuestBook() {
                     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
                     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                   </svg>
-                  Share with someone who knows Nika
+                  Copy link
                 </span>
               </button>
             </div>
+            {sharePageUrl ? (
+              <div className="bgb-share-chips" role="group" aria-label="Share in an app">
+                {canSystemShare ? (
+                  <button
+                    type="button"
+                    className="bgb-action-btn bgb-share-chip"
+                    onClick={() => void systemShare()}
+                  >
+                    Share…
+                  </button>
+                ) : null}
+                <a className="bgb-action-btn bgb-share-chip" href={smsHref}>
+                  Messages
+                </a>
+                <a
+                  className="bgb-action-btn bgb-share-chip"
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp
+                </a>
+                <a className="bgb-action-btn bgb-share-chip" href={mailHref}>
+                  Mail
+                </a>
+                <a
+                  className="bgb-action-btn bgb-share-chip"
+                  href={fbHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Facebook
+                </a>
+              </div>
+            ) : null}
           </div>
           {loadingStats || !stats ? (
             <p className="proto-sub bgb-goal-panel-after-share" style={{ marginBottom: 0 }}>
