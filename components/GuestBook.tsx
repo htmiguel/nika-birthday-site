@@ -9,12 +9,6 @@ import {
   useState,
 } from "react";
 
-const SHARE_TITLE = "Nika's birthday guest book";
-
-function buildShareMessage(url: string) {
-  return `Leave a birthday wish for Nika — add a message, voice note, or photo on her guest book:\n${url}`;
-}
-
 type PublicStats = {
   uniquePeople: number;
   totalSubmissions: number;
@@ -31,8 +25,6 @@ export function GuestBook() {
   const [openModal, setOpenModal] = useState<null | "message" | "voice" | "photo">(null);
   const [shareCopiedVisible, setShareCopiedVisible] = useState(false);
   const [shareCopiedKey, setShareCopiedKey] = useState(0);
-  const [sharePageUrl, setSharePageUrl] = useState("");
-  const [canSystemShare, setCanSystemShare] = useState(false);
 
   const dlgMessage = useRef<HTMLDialogElement>(null);
   const dlgVoice = useRef<HTMLDialogElement>(null);
@@ -99,11 +91,6 @@ export function GuestBook() {
     const id = window.setTimeout(() => setShareCopiedVisible(false), 2500);
     return () => window.clearTimeout(id);
   }, [shareCopiedVisible, shareCopiedKey]);
-
-  useEffect(() => {
-    setSharePageUrl(window.location.href);
-    setCanSystemShare(typeof navigator.share === "function");
-  }, []);
 
   useEffect(() => {
     const dm = dlgMessage.current;
@@ -331,8 +318,7 @@ export function GuestBook() {
   }
 
   async function copyShare() {
-    const url =
-      sharePageUrl || (typeof window !== "undefined" ? window.location.href : "");
+    const url = typeof window !== "undefined" ? window.location.href : "";
     if (!url) return;
     const flashCopied = () => {
       setShareCopiedKey((k) => k + 1);
@@ -358,29 +344,6 @@ export function GuestBook() {
       }
     }
   }
-
-  async function systemShare() {
-    const url =
-      sharePageUrl || (typeof window !== "undefined" ? window.location.href : "");
-    if (!url || typeof navigator.share !== "function") {
-      void copyShare();
-      return;
-    }
-    const text = buildShareMessage(url);
-    try {
-      await navigator.share({
-        title: SHARE_TITLE,
-        text,
-        url,
-      });
-    } catch (e) {
-      const err = e as { name?: string };
-      if (err?.name !== "AbortError") void copyShare();
-    }
-  }
-
-  const shareMessage = sharePageUrl ? buildShareMessage(sharePageUrl) : "";
-  const smsHref = sharePageUrl ? `sms:?body=${encodeURIComponent(shareMessage)}` : "";
 
   return (
     <div className="proto-shell wide">
@@ -484,22 +447,6 @@ export function GuestBook() {
                 </span>
               </button>
             </div>
-            {sharePageUrl ? (
-              <div className="bgb-share-chips" role="group" aria-label="More share options">
-                {canSystemShare ? (
-                  <button
-                    type="button"
-                    className="bgb-action-btn bgb-share-chip"
-                    onClick={() => void systemShare()}
-                  >
-                    Share…
-                  </button>
-                ) : null}
-                <a className="bgb-action-btn bgb-share-chip" href={smsHref}>
-                  Messages
-                </a>
-              </div>
-            ) : null}
           </div>
           {loadingStats || !stats ? (
             <p className="proto-sub bgb-goal-panel-after-share" style={{ marginBottom: 0 }}>

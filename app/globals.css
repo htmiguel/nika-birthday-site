@@ -328,25 +328,6 @@ a.bgb-action-btn {
   line-height: 1.35;
 }
 
-.bgb-share-chips {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.45rem;
-  margin-top: 0.5rem;
-  width: 100%;
-}
-
-.bgb-share-chips > :last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
-
-.bgb-share-chip {
-  min-height: 2.45rem;
-  padding: 0.45rem 0.5rem;
-  font-size: clamp(0.74rem, 2.8vw, 0.84rem);
-  line-height: 1.2;
-}
-
 .bgb-goal-panel .bgb-share {
   margin-bottom: 0;
   padding-bottom: 1rem;
