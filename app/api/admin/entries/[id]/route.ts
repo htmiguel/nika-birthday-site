@@ -49,12 +49,12 @@ export async function DELETE(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const expected = process.env.JORDAN_ADMIN_SECRET?.trim();
+  const expected = process.env.NIKA_ADMIN_SECRET?.trim();
   if (!expected || expected.length < 8) {
     return NextResponse.json({ error: "Admin not configured." }, { status: 503 });
   }
 
-  const secret = req.headers.get("x-jordan-admin-secret")?.trim();
+  const secret = req.headers.get("x-nika-admin-secret")?.trim();
   if (!secret || secret !== expected) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }

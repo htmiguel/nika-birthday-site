@@ -16,22 +16,22 @@ function formatTs(iso: string) {
   return isNaN(d.getTime()) ? iso : d.toLocaleString();
 }
 
-export default async function JordanAdminPage({
+export default async function NikaAdminPage({
   searchParams,
 }: {
   searchParams: Promise<{ secret?: string }>;
 }) {
   const { secret } = await searchParams;
-  const expected = process.env.JORDAN_ADMIN_SECRET?.trim();
+  const expected = process.env.NIKA_ADMIN_SECRET?.trim();
 
   if (!expected || expected.length < 8) {
     return (
       <div className="admin-page">
-        <h1>Jordan admin</h1>
+        <h1>Nika admin</h1>
         <p className="admin-muted">
-          Set <code className="admin-code">JORDAN_ADMIN_SECRET</code> in Vercel (at least 8
+          Set <code className="admin-code">NIKA_ADMIN_SECRET</code> in Vercel (at least 8
           characters), redeploy, then visit{" "}
-          <code className="admin-code">/jordan/admin?secret=…</code>
+          <code className="admin-code">/nika/admin?secret=…</code>
         </p>
         <p>
           <Link href="/">← Guest book</Link>
@@ -43,10 +43,10 @@ export default async function JordanAdminPage({
   if (secret !== expected) {
     return (
       <div className="admin-page">
-        <h1>Jordan admin</h1>
+        <h1>Nika admin</h1>
         <p className="admin-muted">
           Open this page with your secret in the query string, e.g.{" "}
-          <code className="admin-code">/jordan/admin?secret=YOUR_SECRET</code>
+          <code className="admin-code">/nika/admin?secret=YOUR_SECRET</code>
         </p>
         <p className="admin-muted">Bookmark that URL; don’t share it publicly.</p>
         <p>
@@ -62,7 +62,7 @@ export default async function JordanAdminPage({
   } catch {
     return (
       <div className="admin-page">
-        <h1>Jordan admin</h1>
+        <h1>Nika admin</h1>
         <p className="admin-error">Could not load entries from the database.</p>
         <p>
           <Link href="/">← Guest book</Link>
@@ -74,7 +74,7 @@ export default async function JordanAdminPage({
   return (
     <div className="admin-page">
       <header className="admin-header">
-        <h1>Jordan admin</h1>
+        <h1>Nika admin</h1>
         <p className="admin-muted">
           {entries.length} submission{entries.length === 1 ? "" : "s"} (newest first)
         </p>

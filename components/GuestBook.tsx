@@ -18,24 +18,17 @@ type PublicStats = {
   prevTier: number;
 };
 
-/** Cash App pay link for the birthday cash modal */
-const CASH_APP_CASHTAG = "$Jhw487";
-const CASH_APP_PAY_URL = "https://cash.app/$Jhw487";
-
 export function GuestBook() {
   const [stats, setStats] = useState<PublicStats | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loadingStats, setLoadingStats] = useState(true);
-  const [openModal, setOpenModal] = useState<
-    null | "message" | "voice" | "photo" | "cash"
-  >(null);
+  const [openModal, setOpenModal] = useState<null | "message" | "voice" | "photo">(null);
   const [shareCopiedVisible, setShareCopiedVisible] = useState(false);
   const [shareCopiedKey, setShareCopiedKey] = useState(0);
 
   const dlgMessage = useRef<HTMLDialogElement>(null);
   const dlgVoice = useRef<HTMLDialogElement>(null);
   const dlgPhoto = useRef<HTMLDialogElement>(null);
-  const dlgCash = useRef<HTMLDialogElement>(null);
   /** Skip syncing openModal when we close dialogs to switch to another */
   const progCloseRef = useRef(false);
 
@@ -103,30 +96,23 @@ export function GuestBook() {
     const dm = dlgMessage.current;
     const dv = dlgVoice.current;
     const dp = dlgPhoto.current;
-    const dc = dlgCash.current;
     progCloseRef.current = true;
     dm?.close();
     dv?.close();
     dp?.close();
-    dc?.close();
     if (openModal === "message") dm?.showModal();
     else if (openModal === "voice") dv?.showModal();
     else if (openModal === "photo") dp?.showModal();
-    else if (openModal === "cash") dc?.showModal();
     requestAnimationFrame(() => {
       progCloseRef.current = false;
     });
   }, [openModal]);
 
   useLayoutEffect(() => {
-    const pairs: [
-      React.RefObject<HTMLDialogElement | null>,
-      "message" | "voice" | "photo" | "cash",
-    ][] = [
+    const pairs: [React.RefObject<HTMLDialogElement | null>, "message" | "voice" | "photo"][] = [
       [dlgMessage, "message"],
       [dlgVoice, "voice"],
       [dlgPhoto, "photo"],
-      [dlgCash, "cash"],
     ];
     const cleanups: (() => void)[] = [];
     for (const [ref, kind] of pairs) {
@@ -187,10 +173,6 @@ export function GuestBook() {
     }
     if (photoInputRef.current) photoInputRef.current.value = "";
     setOpenModal("photo");
-  }
-
-  function openCash() {
-    setOpenModal("cash");
   }
 
   async function submitMessage() {
@@ -371,26 +353,42 @@ export function GuestBook() {
         </div>
       )}
 
-      <section
-        className="bgb-card"
-        aria-label="Jordan's 18th birthday guest book"
-      >
+      <section className="bgb-card" aria-label="Nika birthday guest book">
         <div className="bgb-card-top">
-          <div className="bgb-card-visual">
-            <Image src="/hero.png" alt="Guest of honor" width={240} height={240} />
+          <div
+            className="bgb-card-visual"
+            role="img"
+            aria-label="Nika — childhood photo fading into a recent photo, on a loop"
+          >
+            <div className="bgb-hero-crossfade">
+              <span className="bgb-hero-layer-wrap bgb-hero-layer-wrap--now">
+                <Image
+                  src="/nika-now.png"
+                  alt=""
+                  fill
+                  sizes="(max-width: 480px) 72vw, 14rem"
+                  className="bgb-hero-img"
+                />
+              </span>
+              <span className="bgb-hero-layer-wrap bgb-hero-layer-wrap--young">
+                <Image
+                  src="/nika-young.png"
+                  alt=""
+                  fill
+                  sizes="(max-width: 480px) 72vw, 14rem"
+                  className="bgb-hero-img"
+                  priority
+                />
+              </span>
+            </div>
           </div>
           <p className="bgb-card-kicker">Birthday guest book</p>
-          <p className="bgb-card-title">Jordan&apos;s 18th birthday</p>
+          <p className="bgb-card-title">Nika&apos;s birthday</p>
           <p className="bgb-card-sub">
-            A milestone birthday. And he&apos;s graduating from high school.
-            <br />
-            Leave him a voice, text, or photo note—and send him money for his summer trip to Europe!
+            Leave her a voice note, a written message, or a photo — it all lands in one guest book.
           </p>
         </div>
         <div className="bgb-actions">
-          <button type="button" className="bgb-action-btn primary" onClick={openCash}>
-            Send Birthday Cash 💰
-          </button>
           <button type="button" className="bgb-action-btn primary" onClick={openMessage}>
             Leave a message
           </button>
@@ -444,7 +442,7 @@ export function GuestBook() {
                     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
                     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                   </svg>
-                  Share with someone who knows Jordan
+                  Share with someone who knows Nika
                 </span>
               </button>
             </div>
@@ -705,7 +703,7 @@ export function GuestBook() {
               onChange={onPhotoPick}
             />
             <button type="button" className="bgb-action-btn" onClick={() => photoInputRef.current?.click()}>
-              Share a photo of him
+              Choose a photo
             </button>
             {photoPreviewUrl && (
               <div className="bgb-photo-preview">
@@ -741,59 +739,6 @@ export function GuestBook() {
                 Done
               </button>
             </div>
-          </div>
-        </div>
-      </dialog>
-
-      <dialog
-        ref={dlgCash}
-        className="bgb-modal"
-        aria-labelledby="dlgCashTitle"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            dlgCash.current?.close();
-            setOpenModal(null);
-          }
-        }}
-      >
-        <div className="bgb-modal-inner">
-          <div className="bgb-modal-head">
-            <h2 id="dlgCashTitle">Send Birthday Cash</h2>
-            <button
-              type="button"
-              className="bgb-modal-close"
-              aria-label="Close"
-              onClick={() => {
-                dlgCash.current?.close();
-                setOpenModal(null);
-              }}
-            >
-              ×
-            </button>
-          </div>
-          <p className="proto-sub" style={{ margin: "0 0 1rem", lineHeight: 1.5 }}>
-            Open Cash App to send money to{" "}
-            <strong style={{ color: "var(--text)" }}>{CASH_APP_CASHTAG}</strong>.
-          </p>
-          <div className="bgb-modal-actions">
-            <a
-              href={CASH_APP_PAY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bgb-action-btn primary"
-            >
-              Open in Cash App
-            </a>
-            <button
-              type="button"
-              className="bgb-action-btn"
-              onClick={() => {
-                dlgCash.current?.close();
-                setOpenModal(null);
-              }}
-            >
-              Close
-            </button>
           </div>
         </div>
       </dialog>

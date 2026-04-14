@@ -1,12 +1,14 @@
-# Birthday guest book (Vercel)
+# Nika birthday guest book (Vercel)
 
-Next.js app: guests leave a **text message**, **voice note** (uploaded as audio), or **photo**. Rows are stored in **Neon Postgres**; media files go to **Vercel Blob**. A local-only static sketch (no backend) may still live in your **second-brain** Obsidian vault: `projects/direct-prototypes/birthday-guest-book/`.
+Next.js app: guests leave a **text message**, **voice note** (uploaded as audio), or **photo**. Rows are stored in **Neon Postgres**; media files go to **Vercel Blob**. The home hero uses **`public/nika-young.png`** and **`public/nika-now.png`** with a gentle crossfade animation.
 
 ## Prerequisites
 
 - [Vercel](https://vercel.com) account
 - [Neon](https://neon.tech) database (easiest: add the **Neon** integration on the Vercel project — sets `DATABASE_URL`)
 - [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) store on the same project (sets `BLOB_READ_WRITE_TOKEN`)
+
+Use a **dedicated** Neon database and Blob store for this project (do not share a guest book database with another site unless you want combined entries).
 
 ## One-time database setup
 
@@ -16,9 +18,9 @@ Next.js app: guests leave a **text message**, **voice note** (uploaded as audio)
 ## Local development
 
 ```bash
-cd /path/to/birthday-site   # this repo root
+cd /path/to/nika-birthday-site   # this repo root
 cp .env.example .env.local
-# Fill DATABASE_URL and BLOB_READ_WRITE_TOKEN
+# Fill DATABASE_URL, BLOB_READ_WRITE_TOKEN, and NIKA_ADMIN_SECRET (optional locally)
 npm install
 npm run dev
 ```
@@ -27,35 +29,36 @@ Open [http://127.0.0.1:3040](http://127.0.0.1:3040). Mic recording needs a **sec
 
 ## Deploy on Vercel
 
-1. **New Project** → import this Git repo (or connect this folder’s Git remote).
-2. Leave **Root Directory** as **`.`** (repository root — this app is the whole repo).
-3. Connect **database + file storage** (next section).
-4. Redeploy after env vars exist.
+1. **New Project** → import this Git repo (e.g. **`nika-birthday-site`**).
+2. Set the Vercel **project name** to **`nika`** if you want the default URL **`https://nika.vercel.app`** (slug must be available on your account).
+3. Leave **Root Directory** as **`.`** (repository root — this app is the whole repo).
+4. Connect **database + file storage** (next section).
+5. Redeploy after env vars exist.
 
 ## Connect database and Blob (step by step)
 
-Do this in the Vercel dashboard for this site’s project (the Next.js app — not only the database project). If you already use a project named **birthday-guestbook**, these steps apply there.
+Do this in the Vercel dashboard for **this** Next.js project.
 
-### A. Link “Jordan-B Day” (or any Vercel Postgres) to this app
+### A. Link Postgres (Neon) to this app
 
-The app reads **`DATABASE_URL`** or **`POSTGRES_URL`** (whichever Vercel sets for Jordan-B Day). The display name **Jordan-B Day** is only in the dashboard.
+The app reads **`DATABASE_URL`** or **`POSTGRES_URL`** (whichever Vercel sets when you connect Neon / Vercel Postgres).
 
 1. Open Vercel → your deployed Next.js project for this app.
-2. Go to **Storage** → find **Jordan-B Day** (or your Postgres/Neon store).
-3. **Connect** / **Link** that database to **this** project if it isn’t already.  
-   - If the DB was created under another Vercel project, open **Jordan-B Day** → **Settings** / **Connect project** and attach this app’s project, **or** copy the **Postgres connection string** and add it manually (next step).
-4. **Settings → Environment Variables** → confirm **`DATABASE_URL`** or **`POSTGRES_URL`** exists for **Production** (and Preview if you use preview URLs). Linking usually adds them automatically; if you only see one of them, that is fine — this app checks both.
+2. Go to **Storage** → create or select your **Postgres** / Neon store.
+3. **Connect** / **Link** that database to **this** project.  
+   - If the DB was created under another Vercel project, use that store’s **Connect project** flow, **or** copy the **connection string** and add **`DATABASE_URL`** manually under **Settings → Environment Variables**.
+4. Confirm **`DATABASE_URL`** or **`POSTGRES_URL`** exists for **Production** (and Preview if you use preview URLs). This app checks both.
 
 ### B. Create tables (schema)
 
 Pick one:
 
-- **Neon / SQL editor (easiest):** open the console from the **Jordan-B Day** / Neon UI → **SQL Editor** → paste all of [`schema.sql`](schema.sql) → **Run**.
+- **Neon / SQL editor (easiest):** open your database in Neon → **SQL Editor** → paste all of [`schema.sql`](schema.sql) → **Run**.
 
 - **CLI from your machine** (needs `DATABASE_URL` in the environment):
 
   ```bash
-  cd /path/to/birthday-site
+  cd /path/to/nika-birthday-site
   # Optional: pull env from Vercel (requires Vercel CLI + logged in)
   vercel env pull .env.local
   export $(grep -v '^#' .env.local | xargs)   # macOS/Linux; or paste DATABASE_URL manually
@@ -92,7 +95,7 @@ Analytics only measures traffic — it does **not** replace Postgres or Blob for
 |------|---------|
 | `DATABASE_URL` or `POSTGRES_URL` | Neon / Vercel Postgres connection string (app checks both) |
 | `BLOB_READ_WRITE_TOKEN` | From Vercel Blob store (server uploads) |
-| `JORDAN_ADMIN_SECRET` | At least 8 characters; unlocks `/jordan/admin?secret=…` (full entry list) |
+| `NIKA_ADMIN_SECRET` | At least 8 characters; unlocks `/nika/admin?secret=…` (full entry list) |
 
 ### Blob token troubleshooting
 
@@ -116,9 +119,9 @@ See [`.env.example`](.env.example).
 ## Public vs admin
 
 - **Home page** shows only **how many distinct names** have participated, **total submissions**, a **progress bar**, and **next goal** (10 → 25 → 50 → 100 → 250 → 500 → 1000, then +500).
-- **`/jordan/admin?secret=…`** lists every message, voice, and photo (newest first). Set **`JORDAN_ADMIN_SECRET`** in Vercel (8+ chars), redeploy, then bookmark `https://YOUR_DOMAIN/jordan/admin?secret=YOUR_SECRET`. Anyone with the URL can see all entries — keep it private.
+- **`/nika/admin?secret=…`** lists every message, voice, and photo (newest first). Set **`NIKA_ADMIN_SECRET`** in Vercel (8+ chars), redeploy, then bookmark `https://YOUR_DOMAIN/nika/admin?secret=YOUR_SECRET`. Anyone with the URL can see all entries — keep it private.
 
 ## Notes
 
 - There is **no auth** on the main guest book; add rate limiting, CAPTCHA, or admin moderation before a wide public launch.
-- **Hero image**: replace [`public/hero.png`](public/hero.png) with your own asset (same path/name or update `GuestBook.tsx`).
+- **Hero photos:** replace [`public/nika-young.png`](public/nika-young.png) and [`public/nika-now.png`](public/nika-now.png), or edit paths in [`components/GuestBook.tsx`](components/GuestBook.tsx).

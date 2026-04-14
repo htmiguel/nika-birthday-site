@@ -119,6 +119,62 @@ body {
   display: block;
 }
 
+.bgb-hero-crossfade {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.bgb-hero-layer-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.bgb-hero-layer-wrap--young {
+  z-index: 1;
+  animation: bgbHeroYoung 12s ease-in-out infinite;
+}
+
+.bgb-hero-layer-wrap--now {
+  z-index: 0;
+  animation: bgbHeroNow 12s ease-in-out infinite;
+}
+
+.bgb-hero-img {
+  object-fit: cover;
+  object-position: center center;
+}
+
+@keyframes bgbHeroYoung {
+  0%,
+  24% {
+    opacity: 1;
+  }
+  30%,
+  58% {
+    opacity: 0;
+  }
+  64%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bgbHeroNow {
+  0%,
+  24% {
+    opacity: 0;
+  }
+  30%,
+  58% {
+    opacity: 1;
+  }
+  64%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .bgb-card-kicker {
   font-size: 0.68rem;
   text-transform: uppercase;

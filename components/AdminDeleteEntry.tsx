@@ -23,7 +23,7 @@ export function AdminDeleteEntry({
     try {
       const res = await fetch(`/api/admin/entries/${entryId}`, {
         method: "DELETE",
-        headers: { "X-Jordan-Admin-Secret": adminSecret },
+        headers: { "X-Nika-Admin-Secret": adminSecret },
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {

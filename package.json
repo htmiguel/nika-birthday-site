@@ -1,5 +1,5 @@
 {
-  "name": "birthday-site",
+  "name": "nika-birthday-site",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3040",

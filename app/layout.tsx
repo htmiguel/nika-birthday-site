@@ -3,8 +3,8 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Birthday guest book",
-  description: "Leave a message, voice note, or photo for the celebration.",
+  title: "Nika — birthday guest book",
+  description: "Leave Nika a message, voice note, or photo for her birthday.",
 };
 
 export const viewport: Viewport = {
