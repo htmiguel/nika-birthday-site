@@ -1,6 +1,6 @@
 # Nika birthday guest book (Vercel)
 
-Next.js app: guests leave a **text message**, **voice note** (uploaded as audio), or **photo**. Rows are stored in **Neon Postgres**; media files go to **Vercel Blob**. The home hero uses **`public/nika-young.png`** and **`public/nika-now.png`** with a gentle crossfade animation.
+Next.js app: guests leave a **text message**, **voice note** (uploaded as audio), or **photo**. Rows are stored in **Neon Postgres**; media files go to **Vercel Blob**. The home hero uses **`public/nika-young.png`**.
 
 ## Prerequisites
 
@@ -125,4 +125,4 @@ See [`.env.example`](.env.example).
 ## Notes
 
 - There is **no auth** on the main guest book; add rate limiting, CAPTCHA, or admin moderation before a wide public launch.
-- **Hero photos:** replace [`public/nika-young.png`](public/nika-young.png) and [`public/nika-now.png`](public/nika-now.png), or edit paths in [`components/GuestBook.tsx`](components/GuestBook.tsx).
+- **Hero photo:** replace [`public/nika-young.png`](public/nika-young.png) or edit the path in [`components/GuestBook.tsx`](components/GuestBook.tsx).

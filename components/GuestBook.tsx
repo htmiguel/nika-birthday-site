@@ -355,32 +355,14 @@ export function GuestBook() {
 
       <section className="bgb-card" aria-label="Nika birthday guest book">
         <div className="bgb-card-top">
-          <div
-            className="bgb-card-visual"
-            role="img"
-            aria-label="Nika — childhood photo fading into a recent photo, on a loop"
-          >
-            <div className="bgb-hero-crossfade">
-              <span className="bgb-hero-layer-wrap bgb-hero-layer-wrap--now">
-                <Image
-                  src="/nika-now.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 480px) 72vw, 14rem"
-                  className="bgb-hero-img"
-                />
-              </span>
-              <span className="bgb-hero-layer-wrap bgb-hero-layer-wrap--young">
-                <Image
-                  src="/nika-young.png"
-                  alt=""
-                  fill
-                  sizes="(max-width: 480px) 72vw, 14rem"
-                  className="bgb-hero-img"
-                  priority
-                />
-              </span>
-            </div>
+          <div className="bgb-card-visual">
+            <Image
+              src="/nika-young.png"
+              alt="Nika as a child"
+              fill
+              sizes="(max-width: 480px) 72vw, 14rem"
+              priority
+            />
           </div>
           <p className="bgb-card-kicker">Birthday guest book</p>
           <p className="bgb-card-title">Nika&apos;s birthday</p>
